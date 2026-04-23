@@ -1,9 +1,434 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-<title>My Site</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>(주)바호도시건축사사무소 | BAHO GROUP</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Premium Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Noto Sans KR"', 'sans-serif'],
+                        serif: ['"Nanum Myeongjo"', 'serif'],
+                    },
+                    colors: {
+                        gold: '#C5A059',
+                        goldDark: '#A38247',
+                        basic: '#F9F8F5',
+                        basicDark: '#EFECE6',
+                        dark: '#1A1A1A',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* [style.css 영역] */
+        html { scroll-behavior: smooth; }
+        
+        body {
+            background-color: #F9F8F5;
+            color: #1A1A1A;
+        }
+
+        .hero-section {
+            background-image: linear-gradient(rgba(249, 248, 245, 0.7), rgba(249, 248, 245, 0.7)), 
+                              url('https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center 20%;
+        }
+
+        .project-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .process-step::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: -50%;
+            width: 100%;
+            height: 1px;
+            background-color: #C5A059;
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        @media (max-width: 768px) {
+            .process-step::after { display: none; }
+        }
+
+        /* 메뉴 애니메이션 */
+        #mobile-menu {
+            transition: transform 0.3s ease-in-out;
+            transform: translateX(100%);
+        }
+        #mobile-menu.active {
+            transform: translateX(0);
+        }
+
+        /* 커스텀 토스트 메시지 */
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #1A1A1A;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            padding: 16px;
+            position: fixed;
+            z-index: 100;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            border-top: 3px solid #C5A059;
+        }
+        #toast.show {
+            visibility: visible;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+    </style>
 </head>
-<body>
-<h1>Hello</h1>
+<body class="font-sans antialiased">
+
+    <!-- Header -->
+    <header class="fixed w-full top-0 z-50 bg-basic/90 backdrop-blur-md border-b border-gold/20 transition-all duration-300" id="main-header">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12 flex justify-between items-center h-20">
+            <!-- Logo Area -->
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="window.scrollTo(0,0)">
+                <img src="https://via.placeholder.com/200x50/F9F8F5/C5A059?text=BAHO+GROUP" alt="BAHO Logo" class="h-10">
+            </div>
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex space-x-10 text-sm font-bold tracking-widest text-gray-600">
+                <a href="#about" class="hover:text-gold transition-colors uppercase">Philosophy</a>
+                <a href="#products" class="hover:text-gold transition-colors uppercase">Projects</a>
+                <a href="#services" class="hover:text-gold transition-colors uppercase">Services</a>
+                <a href="#booking" class="text-gold border-b-2 border-gold/50 hover:border-gold pb-1 transition-all uppercase">Inquiry</a>
+            </nav>
+            <!-- Mobile Toggle -->
+            <div class="md:hidden text-gold text-2xl cursor-pointer" id="menu-open">
+                <i class="fa-solid fa-bars-staggered"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 z-[60] bg-dark flex flex-col p-10 md:hidden">
+        <div class="flex justify-end mb-10">
+            <button id="menu-close" class="text-gold text-3xl"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <nav class="flex flex-col space-y-8 text-2xl font-serif text-white">
+            <a href="#about" class="mobile-link">PHILOSOPHY</a>
+            <a href="#products" class="mobile-link">PROJECTS</a>
+            <a href="#services" class="mobile-link">SERVICES</a>
+            <a href="#booking" class="text-gold mobile-link">INQUIRY</a>
+        </nav>
+        <div class="mt-auto border-t border-white/10 pt-10">
+            <p class="text-gray-500 text-sm mb-2">Contact Us</p>
+            <p class="text-white font-bold">02-3477-3339</p>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero-section h-screen flex items-center justify-center relative overflow-hidden">
+        <div class="max-w-5xl mx-auto text-center px-6">
+            <p class="text-gold tracking-[0.4em] font-bold text-sm mb-6 uppercase">Premier Urban Architecture</p>
+            <h1 class="font-serif text-5xl md:text-7xl lg:text-8xl font-black text-dark leading-tight mb-8">
+                개발에성공한 디자인과<br>
+                <span class="text-gold">( 주)바호도시건축사사무소</span>
+            </h1>
+            <p class="text-lg md:text-xl text-gray-600 font-medium max-w-2xl mx-auto leading-relaxed mb-12">
+                대한민국 상위 1% 하이엔드 주거의 기준을 세웁니다.<br>
+                30년 정비사업의 권위, 바호가 당신의 자산을 예술로 빚어냅니다.
+            </p>
+            <a href="#booking" class="bg-dark text-white px-12 py-5 rounded-sm font-bold tracking-widest hover:bg-gold transition-all duration-500 shadow-2xl inline-block">상담 예약하기</a>
+        </div>
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 text-gold animate-bounce">
+            <i class="fa-solid fa-chevron-down text-2xl"></i>
+        </div>
+    </section>
+
+    <!-- About Us -->
+    <section id="about" class="py-32 px-6 lg:px-12 max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+            <div class="order-2 lg:order-1">
+                <h2 class="text-gold font-bold tracking-widest text-sm mb-4 uppercase">Architectural Philosophy</h2>
+                <h3 class="font-serif text-4xl md:text-5xl font-bold text-dark mb-8 leading-tight">
+                    공간에 진실됨을 담는<br>'영성건축철학'
+                </h3>
+                <p class="text-gray-600 leading-relaxed text-lg font-light mb-10">
+                    바호그룹은 지난 30년간 강남·서초의 랜드마크를 설계하며 주거 문화의 정점을 제시해왔습니다. 우리는 단순히 건물을 짓는 것이 아니라, 건축주의 비전과 대지의 영혼이 만나는 지점을 설계합니다.
+                </p>
+                <div class="space-y-4 border-l-4 border-gold pl-8 py-2 bg-basicDark/30 rounded-r-lg">
+                    <p class="text-dark font-bold text-xl">윤상조 대표건축사</p>
+                    <ul class="text-sm text-gray-600 space-y-2">
+                        <li><i class="fa-solid fa-circle-check text-gold mr-2 text-[10px]"></i> 현) 서울시 정비사업통합 심의위원</li>
+                        <li><i class="fa-solid fa-circle-check text-gold mr-2 text-[10px]"></i> 전) 서울시 건축심의위원 / 강남구 건축위원회 위원</li>
+                        <li><i class="fa-solid fa-circle-check text-gold mr-2 text-[10px]"></i> 대표작: 원베일리, 래미안 리더스원, 아크로리버뷰 등</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="order-1 lg:order-2 relative group">
+                <div class="absolute -inset-4 border-2 border-gold/20 translate-x-4 translate-y-4 group-hover:translate-x-2 group-hover:translate-y-2 transition-transform duration-500"></div>
+                <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop" alt="Baho Project Image" class="rounded-sm shadow-2xl grayscale group-hover:grayscale-0 transition-all duration-1000 h-[550px] w-full object-cover relative z-10">
+                <div class="absolute -bottom-6 -right-6 bg-gold p-10 text-white z-20 shadow-xl">
+                    <p class="text-4xl font-serif font-bold">30+</p>
+                    <p class="text-[10px] tracking-[0.3em] uppercase mt-1">Years of Legacy</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products -->
+    <section id="products" class="py-32 bg-basicDark px-6 lg:px-12">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-24">
+                <h2 class="text-gold font-bold tracking-widest text-sm mb-4 uppercase">Core Expertise</h2>
+                <h3 class="font-serif text-4xl font-bold text-dark">자산의 가치를 바꾸는 사업 영역</h3>
+                <div class="w-16 h-1 bg-gold mx-auto mt-6"></div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Card -->
+                <div class="project-card bg-white p-10 border-t-4 border-gold/30 hover:border-gold group cursor-pointer shadow-sm hover:shadow-2xl transition-all duration-500 rounded-b-lg">
+                    <div class="text-gold text-3xl mb-6"><i class="fa-solid fa-city"></i></div>
+                    <h4 class="font-serif text-xl font-bold mb-4 group-hover:text-gold transition-colors">역세권활성화사업</h4>
+                    <p class="text-sm text-gray-500 leading-relaxed">복합개발을 통한 용적률 극대화와 지역 거점 랜드마크 구축 솔루션을 제공합니다.</p>
+                </div>
+                <div class="project-card bg-white p-10 border-t-4 border-gold/30 hover:border-gold group cursor-pointer shadow-sm hover:shadow-2xl transition-all duration-500 rounded-b-lg">
+                    <div class="text-gold text-3xl mb-6"><i class="fa-solid fa-building-columns"></i></div>
+                    <h4 class="font-serif text-xl font-bold mb-4 group-hover:text-gold transition-colors">도심복합개발사업</h4>
+                    <p class="text-sm text-gray-500 leading-relaxed">주거와 상업이 조화된 고품격 복합 공간을 설계하여 대지의 잠재력을 실현합니다.</p>
+                </div>
+                <div class="project-card bg-white p-10 border-t-4 border-gold/30 hover:border-gold group cursor-pointer shadow-sm hover:shadow-2xl transition-all duration-500 rounded-b-lg">
+                    <div class="text-gold text-3xl mb-6"><i class="fa-solid fa-map-location-dot"></i></div>
+                    <h4 class="font-serif text-xl font-bold mb-4 group-hover:text-gold transition-colors">가로정비사업</h4>
+                    <p class="text-sm text-gray-500 leading-relaxed">노후화된 구역을 정비하여 신속하고 안전한 하이엔드 주거지로 탈바꿈시킵니다.</p>
+                </div>
+                <div class="project-card bg-white p-10 border-t-4 border-gold/30 hover:border-gold group cursor-pointer shadow-sm hover:shadow-2xl transition-all duration-500 rounded-b-lg">
+                    <div class="text-gold text-3xl mb-6"><i class="fa-solid fa-house-chimney-window"></i></div>
+                    <h4 class="font-serif text-xl font-bold mb-4 group-hover:text-gold transition-colors">모아타운개발</h4>
+                    <p class="text-sm text-gray-500 leading-relaxed">소규모 정비를 하나로 묶어 대단지 수준의 인프라와 프리미엄을 확보합니다.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services -->
+    <section id="services" class="py-32 px-6 lg:px-12 max-w-7xl mx-auto">
+        <div class="text-center mb-24">
+            <h2 class="text-gold font-bold tracking-widest text-sm mb-4 uppercase">Professional Services</h2>
+            <h3 class="font-serif text-4xl font-bold text-dark">바호만의 정교한 마스터피스 솔루션</h3>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-16 mb-32">
+            <div class="text-center group">
+                <div class="w-20 h-20 bg-basicDark rounded-full flex items-center justify-center mx-auto mb-8 group-hover:bg-gold group-hover:text-white transition-colors duration-500">
+                    <i class="fa-solid fa-compass-drafting text-3xl"></i>
+                </div>
+                <h4 class="text-xl font-bold mb-4">도시·건축설계</h4>
+                <p class="text-gray-500 text-sm px-4 leading-relaxed">인허가 리스크를 최소화하고 분양성이 뛰어난 최적의 평면 디자인을 도출합니다.</p>
+            </div>
+            <div class="text-center group">
+                <div class="w-20 h-20 bg-basicDark rounded-full flex items-center justify-center mx-auto mb-8 group-hover:bg-gold group-hover:text-white transition-colors duration-500">
+                    <i class="fa-solid fa-clipboard-check text-3xl"></i>
+                </div>
+                <h4 class="text-xl font-bold mb-4">PCM</h4>
+                <p class="text-gray-500 text-sm px-4 leading-relaxed">기획부터 사후 관리까지 전 과정을 체계적으로 통제하여 공사비와 품질을 보호합니다.</p>
+            </div>
+            <div class="text-center group">
+                <div class="w-20 h-20 bg-basicDark rounded-full flex items-center justify-center mx-auto mb-8 group-hover:bg-gold group-hover:text-white transition-colors duration-500">
+                    <i class="fa-solid fa-palette text-3xl"></i>
+                </div>
+                <h4 class="text-xl font-bold mb-4">문화예술컨설팅</h4>
+                <p class="text-gray-500 text-sm px-4 leading-relaxed">건축물에 예술적 가치를 더해 단지의 브랜드 가치를 하이엔드로 격상시킵니다.</p>
+            </div>
+        </div>
+
+        <!-- Design Process -->
+        <div class="bg-dark p-12 lg:p-24 rounded-sm text-white relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-gold/5 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+            <h4 class="font-serif text-3xl text-center mb-20 text-gold tracking-widest">DESIGN PROCESS</h4>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 relative z-10">
+                <div class="relative text-center process-step">
+                    <div class="w-14 h-14 bg-gold text-white rounded-full flex items-center justify-center font-bold mx-auto mb-8 relative z-10 shadow-lg border-4 border-dark">01</div>
+                    <h5 class="font-bold mb-3 text-lg">기획설계</h5>
+                    <p class="text-xs text-gray-400 font-light">수익성 및 타당성 검토</p>
+                </div>
+                <div class="relative text-center process-step">
+                    <div class="w-14 h-14 bg-gold text-white rounded-full flex items-center justify-center font-bold mx-auto mb-8 relative z-10 shadow-lg border-4 border-dark">02</div>
+                    <h5 class="font-bold mb-3 text-lg">계획설계</h5>
+                    <p class="text-xs text-gray-400 font-light">형태 및 조닝(Zoning) 확정</p>
+                </div>
+                <div class="relative text-center process-step">
+                    <div class="w-14 h-14 bg-gold text-white rounded-full flex items-center justify-center font-bold mx-auto mb-8 relative z-10 shadow-lg border-4 border-dark">03</div>
+                    <h5 class="font-bold mb-3 text-lg">기본설계</h5>
+                    <p class="text-xs text-gray-400 font-light">인허가 도면 및 시스템 설계</p>
+                </div>
+                <div class="relative text-center">
+                    <div class="w-14 h-14 bg-gold text-white rounded-full flex items-center justify-center font-bold mx-auto mb-8 relative z-10 shadow-lg border-4 border-dark">04</div>
+                    <h5 class="font-bold mb-3 text-lg">실시설계</h5>
+                    <p class="text-xs text-gray-400 font-light">정밀 시공 도면 작성</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact & Booking -->
+    <section id="booking" class="py-32 bg-basicDark px-6 lg:px-12">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24">
+            <!-- Contact Info -->
+            <div class="flex flex-col justify-between">
+                <div>
+                    <h2 class="text-gold font-bold tracking-widest text-sm mb-6 uppercase">Contact Us</h2>
+                    <h3 class="font-serif text-4xl md:text-5xl font-bold text-dark mb-12 leading-tight">위대한 유산의 시작,<br>바호가 함께합니다.</h3>
+                    <div class="space-y-10 text-gray-600">
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm text-gold mr-5 flex-shrink-0">
+                                <i class="fa-solid fa-phone"></i>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-bold uppercase text-gray-400 tracking-widest mb-1">Direct Call</p>
+                                <p class="text-2xl font-bold text-dark">02-3477-3339</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm text-gold mr-5 flex-shrink-0">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-bold uppercase text-gray-400 tracking-widest mb-1">Office Location</p>
+                                <p class="text-lg font-medium text-dark leading-relaxed">서울시 서초구 논현로 53 대고빌딩 5층</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Google Map Embed -->
+                <div class="mt-16 h-72 w-full rounded-lg overflow-hidden shadow-2xl border-4 border-white">
+                    <iframe 
+                        src="https://maps.google.com/maps?q=서울특별시%20서초구%20논현로%2053&t=&z=16&ie=UTF8&iwloc=&output=embed" 
+                        width="100%" 
+                        height="100%" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy">
+                    </iframe>
+                </div>
+            </div>
+
+            <!-- Booking Form -->
+            <div class="bg-white p-12 md:p-16 rounded-sm shadow-2xl relative border border-gray-100">
+                <div class="absolute top-0 left-0 w-full h-1.5 bg-gold"></div>
+                <h4 class="font-serif text-3xl font-bold text-dark mb-10">PROJECT INQUIRY</h4>
+                <form id="contact-form" class="space-y-8">
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-400 tracking-widest uppercase mb-3">Client Name / Company *</label>
+                        <input type="text" id="form-name" class="w-full bg-basic border-b-2 border-gray-100 px-4 py-4 focus:outline-none focus:border-gold transition-all" placeholder="성함 또는 기업명을 입력해주세요." required>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-400 tracking-widest uppercase mb-3">Contact Number *</label>
+                        <input type="tel" id="form-phone" class="w-full bg-basic border-b-2 border-gray-100 px-4 py-4 focus:outline-none focus:border-gold transition-all" placeholder="연락처를 입력해주세요." required>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-400 tracking-widest uppercase mb-3">Preferred Consultation Date *</label>
+                        <input type="date" id="form-date" class="w-full bg-basic border-b-2 border-gray-100 px-4 py-4 focus:outline-none focus:border-gold transition-all" required>
+                    </div>
+                    <div class="pt-6">
+                        <button type="submit" class="w-full bg-dark text-white py-6 font-bold tracking-[0.3em] hover:bg-gold transition-all duration-500 shadow-xl uppercase text-sm">Request Consultation</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark py-20 px-6 lg:px-12 border-t border-white/5">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start">
+            <div class="mb-12 md:mb-0">
+                <img src="https://via.placeholder.com/150x40/1A1A1A/C5A059?text=BAHO" alt="Footer Logo" class="h-6 mb-8 opacity-40">
+                <p class="text-gray-500 text-xs leading-relaxed font-light">
+                    (주)바호그룹건축사사무소 | 대표건축사: 윤상조<br>
+                    서울특별시 서초구 논현로 53 대고빌딩 5층 (서초1동 1666-12)<br>
+                    Tel: 02-3477-3339 | Email: baho3339@naver.com
+                </p>
+            </div>
+            <div class="flex flex-col md:items-end text-gray-600">
+                <div class="flex space-x-6 mb-8 text-xl">
+                    <a href="#" class="hover:text-gold transition-colors"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" class="hover:text-gold transition-colors"><i class="fa-brands fa-youtube"></i></a>
+                    <a href="#" class="hover:text-gold transition-colors"><i class="fa-solid fa-blog"></i></a>
+                </div>
+                <p class="text-[10px] tracking-[0.3em] font-medium">&copy; 2026 BAHO GROUP ARCHITECTURE. ALL RIGHTS RESERVED.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Message -->
+    <div id="toast">상담 예약이 접수되었습니다.<br>신속히 연락드리겠습니다.</div>
+
+    <!-- [script.js 영역] -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const header = document.getElementById('main-header');
+            const menuOpen = document.getElementById('menu-open');
+            const menuClose = document.getElementById('menu-close');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileLinks = document.querySelectorAll('.mobile-link');
+            const contactForm = document.getElementById('contact-form');
+            const toast = document.getElementById('toast');
+
+            // 1. Header Scroll Effect
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    header.classList.add('shadow-lg', 'bg-white');
+                    header.classList.remove('bg-basic/90');
+                } else {
+                    header.classList.remove('shadow-lg', 'bg-white');
+                    header.classList.add('bg-basic/90');
+                }
+            });
+
+            // 2. Mobile Menu Toggle
+            const toggleMenu = () => {
+                mobileMenu.classList.toggle('active');
+                document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+            };
+
+            menuOpen.addEventListener('click', toggleMenu);
+            menuClose.addEventListener('click', toggleMenu);
+
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.remove('active');
+                    document.body.style.overflow = '';
+                });
+            });
+
+            // 3. Form Submission
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                // Show custom toast message
+                toast.className = "show";
+                setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
+                
+                // Reset form
+                contactForm.reset();
+            });
+        });
+    </script>
+
 </body>
 </html>
+
